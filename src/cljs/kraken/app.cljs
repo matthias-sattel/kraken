@@ -31,32 +31,6 @@
 
 (swap! app-state assoc :header "Hello again!" :text "I like Clojurescript")
 
-(defn widget [data owner]
-  (reify
-    om/IRender
-    (render [this]
-      (dom/h1 nil
-              (:text data)))))
-
-(defn click []
-  (.log js/alert "test")
-  )
-
-(def connection-chan (chan))
-
-(defn connections-list [data owner]
-  (reify
-    om/IRender
-    (render [this]
-      (html [:div "Connection List"
-             [:ul
-              (map #(let [label (:label %)]
-                      (html [:li [:button {:type "button" :onClick (fn [e] 
-                                                                     (put! (:pub-chan (om/get-shared owner)) {:topic :selection :data label}))} (str label)]])) (:connections data))
-              ]
-             ])
-      )))
-
 (defn connection-view [data owner]
   (reify
     om/IRender
@@ -84,42 +58,4 @@
      connections-view
      {:connections connections}
      {:target (sel1 :#container)})
-                                        ;(om/root
-                                        ;widget
-                                        ;connections-list
-                                        ;app-state
-                                        ;{:connections connections}
-                                        ;{:shared {:pub-chan pub-chan
-                                        ;         :notif-chan notif-chan}
-                                        ;:target (. js/document (getElementById "container"))})
-
-    (om/root
-     (fn [data owner]
-       (reify
-         om/IInitState
-         (init-state [_]
-           {:message nil})
-         om/IDidMount
-         (did-mount [_]
-           (let [events (sub (:notif-chan (om/get-shared owner)) :selection (chan))]
-             (go
-               (loop [e (<! events)]
-                 (om/set-state! owner :message (:data e))
-                 (recur (<! events))))))
-         om/IRenderState
-         (render-state [_ {:keys [message]}]
-           (if message
-             (dom/p nil message)
-             (dom/p nil "Waiting")))))
-     
-                                        ;(om/component (dom/h2 nil
-                                        ;                      (str
-                                        ;                       (go
-                                        ;                         (<! connection-chan)))
-                                        ;(:header data)
-                                        ;                      )))
-
-     app-state
-     {:shared {:pub-chan pub-chan
-               :notif-chan notif-chan}
-      :target (. js/document (getElementById "header"))})))
+))

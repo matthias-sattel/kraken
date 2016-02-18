@@ -37,28 +37,17 @@
   (let [c (container! "container-1")]
     (is (sel1 :#container-1))))
 
-(defn ce [tag & [text]]
-  (let [el (dommy/create-element tag)]
-    (when text
-      (dommy/set-text! el text))
-    el))
-
-(deftest widget-element
-  (let [c (container!)]
-    (om/root app/widget {:text "Hello World!"} {:target c})
-                                        ;(print (str "teste" (sel :h1)))
-                                        ;(is (sel :h1))
-                                        ;(is (= 1
-                                        ;       (count (sel :h1))))
-    (is (= "Hello World!" (dommy/text (first (sel :h1)))))
-    ))
-
-(deftest connections-list
-  (let [c (container!)]
-    (om/root app/connections-list {:data "test"} {:target c})
-    (is (= 2 (dommy/text (dommy/sel1 :div))))
-    ;(is (= 2 (count (dommy/sel :li))))
-    ))
+;; (deftest connections-list
+;;   (let [c (container!)]
+;;     (om/root app/connections-list {:data "test"} {:target c})
+;;     (is (= 2 (dommy/text (dommy/sel1 :div))))
+;;     ;(is (= 2 (count (dommy/sel :li))))
+;;     ))
 
 (deftest access-testdata
   (is (= "PostgreSql" (:type (first testdata/connections)))))
+
+(deftest connections-view-test
+  (let [c (container!)]
+        (om/root app/connections-view {:connections testdata/connections} {:target c})
+        (is (= 2 (count (dommy/sel :li))))))
