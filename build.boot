@@ -9,7 +9,11 @@
                  [crisptrutski/boot-cljs-test "0.2.0-SNAPSHOT" :scope "test"]
                  [org.omcljs/om "0.8.6"]
                  [org.martinklepsch/boot-garden "1.2.5-3" :scope "test"]
-                 [sablono "0.5.3"]])
+                 [sablono "0.6.0"]
+                 [cljsjs/react "0.14.3-0"]
+                 [cljsjs/react-dom "0.14.3-1"]
+                 [prismatic/dommy "1.1.0" :scope "test"]
+                 [org.clojure/core.async "0.2.374"]])
 
 (swap! boot.repl/*default-dependencies*
        concat '[[cider/cider-nrepl "0.10.1"]])
