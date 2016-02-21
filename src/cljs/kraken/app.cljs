@@ -5,25 +5,26 @@
             [dommy.core :refer-macros [sel sel1]]
             [dommy.core :as dommy]
             [sablono.core :as html :refer-macros [html]]
-            [cljs.core.async :refer [pub sub put! chan <! >!]]))
+            [cljs.core.async :refer [put! chan <! ]]))
 
                                         ;[sablono.core :as html]))
 
-(def connections
-  [{:label "MyPostgresqlConnection"
-    :type "PostgreSql"
-    :version "9.4"
-    :database "users"
-    :user "sa"
-    :password "#231342"
-    },
-   {:label "QASqlServer"
-    :type "SqlServer"
-    :version "2012"
-    :database "invoices"
-    :user "sa"
-    :password "#fsapfeof"
-    }])
+(defonce app-state
+  (atom {:connections
+         [{:label "MyPostgresqlConnection"
+           :type "PostgreSql"
+           :version "9.4"
+           :database "users"
+           :user "sa"
+           :password "#231342"
+           },
+          {:label "QSSqlServer"
+           :type "SqlServer"
+           :version "2012"
+           :database "invoices"
+           :user "sa"
+           :password "#fsapfeof"
+           }]}))
 
 
 
@@ -33,9 +34,9 @@
 
 (defn connection-view [data owner]
   (reify
-    om/IRender
-    (render [this]
-      (html [:li (str (:label data)) [:button "Delete it"]])
+    om/IRenderState
+    (render-state [this {:keys [delete]}]
+      (html [:li (str (:label data)) [:button {:onClick (fn [e] (put! delete @data))}"Delete it"]])
                                         ;(dom/li nil (str (:label data))
                                         ;        (dom/button nil "Delete it"))
       )))
@@ -43,19 +44,29 @@
 
 (defn connections-view [data owner]
   (reify
-    om/IRender
-    (render [this]
+    om/IInitState
+    (init-state [_]
+      {:delete (chan)})
+    om/IWillMount
+    (will-mount [_]
+      (let [delete (om/get-state owner :delete)]
+        (go (loop []
+              (let [connection (<! delete)]
+                (om/transact! data :connections
+                              (fn [xs] (vec (remove #(= connection %) xs))))
+                              (recur))))))
+    om/IRenderState
+    (render-state [this {:keys [delete]}]
       (dom/div nil
                (dom/h2 nil "Connections list")
                (apply dom/ul nil
-                      (om/build-all connection-view (:connections data)))))))
+                      (om/build-all connection-view (:connections data)
+                                    {:init-state {:delete delete}}))))))
 
 
 (defn init []
-  (let [pub-chan (chan)
-        notif-chan (pub pub-chan :selection)]
     (om/root
      connections-view
-     {:connections connections}
+     app-state
      {:target (sel1 :#container)})
-))
+)
