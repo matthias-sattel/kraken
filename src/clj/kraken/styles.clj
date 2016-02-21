@@ -5,6 +5,7 @@
 (defstyles screen
   (let [body (rule :body)]
     (body
-     {:font-family "Helvetica Neue"
+     {:background-color "#eee8aa"
+      :font-family "Helvetica Neue"
       :font-size   "16px"
       :line-height 1.5})))
