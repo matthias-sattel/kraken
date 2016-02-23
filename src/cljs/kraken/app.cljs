@@ -5,7 +5,8 @@
             [dommy.core :refer-macros [sel sel1]]
             [dommy.core :as dommy]
             [sablono.core :as html :refer-macros [html]]
-            [cljs.core.async :refer [put! chan <! ]]))
+            [cljs.core.async :refer [put! chan <! ]]
+            [cljs.reader :refer [read-string]]))
 
                                         ;[sablono.core :as html]))
 
@@ -41,6 +42,9 @@
                                         ;        (dom/button nil "Delete it"))
       )))
 
+(defn add-connection [data owner new-connection]
+  (om/transact! data :connections
+                (fn [xs] (vec (conj xs new-connection)))))
 
 (defn connections-view [data owner]
   (reify
@@ -61,7 +65,16 @@
                (dom/h2 nil "Connections list")
                (apply dom/ul nil
                       (om/build-all connection-view (:connections data)
-                                    {:init-state {:delete delete}}))))))
+                                    {:init-state {:delete delete}}))
+               (html [:div
+                      [:input {:type "text" :id "new-connection"}]
+                      [:button {:onClick (fn [e]
+                                           (let [new-connection (read-string (dommy/value (sel1 :#new-connection)))]
+                                             (add-connection data owner new-connection)
+                                           ))
+                                } "Add Connection"]
+                      ])
+               ))))
 
 
 (defn init []
