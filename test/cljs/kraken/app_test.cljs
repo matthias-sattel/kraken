@@ -9,32 +9,12 @@
             [dommy.core :as dommy]
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [kraken.component-test-support :as test-support]
             ))
 
 
-(defn new-id 
-  ([]
-   (str "container-" (gensym)))
-  ([id]
-   (str "container-" id)))
-
-(defn new-node [id]
-  (-> (dommy/create-element "div")
-      (dommy/set-attr! "id" id)))
-
-(defn append-node [node]
-  (dommy/append! (sel1 js/document :body) node))
-
-(defn container!
-  ([]
-   (container! (new-id)))
-  ([id]
-   (-> id
-       new-node
-       append-node)))
-
 (deftest test-container
-  (let [c (container! "container-1")]
+  (let [c (test-support/container! "container-1")]
     (is (sel1 :#container-1))))
 
 ;; (deftest connections-list
@@ -47,7 +27,4 @@
 (deftest access-testdata
   (is (= "PostgreSql" (:type (first testdata/connections)))))
 
-(deftest connections-view-test
-  (let [c (container!)]
-        (om/root app/connections-view {:connections testdata/connections} {:target c})
-        (is (= 2 (count (dommy/sel :li))))))
+
