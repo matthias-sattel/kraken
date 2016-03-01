@@ -35,5 +35,5 @@
     (om/root
      connection-component/connections
      app-state
-     {:target (sel1 :#connection-list-container)})
+     {:target (sel1 :#container)})
 )

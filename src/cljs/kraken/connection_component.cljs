@@ -11,14 +11,17 @@
   (reify
     om/IRenderState
     (render-state [this {:keys [delete]}]
+      (let [label (str (:label data))
+            class-label (str "connection-" label)]
       (html
-       [:div {:class "pure-u-g connection-list-item"}
-        [:div {:class "pure-u-1 pure-u-md-1-2"}
-         [:h3 {:class "connection-list-item-header"}
-          (str (:label data))]]
-        [:div {:class "pure-u-1 pure-u-md-1-2"}
-         [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}"Delete it"]]]
-       )
+       [:div {:class (str "pure-u-1 pure-u-md-1-3 pure-u-lg-1-5 connection-tile " class-label)}
+        [:div {:class "pure-u-g connection-list-item"}
+         [:div {:class "pure-u-1 pure-u-md-1-2"}
+          [:h3 {:class "connection-list-item-header"}
+           label]]
+         [:div {:class "pure-u-1 pure-u-md-1-2"}
+          [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}"Delete it"]]]]
+       ))
       )))
 
 
@@ -26,27 +29,8 @@
   (om/transact! data :connections
                 (fn [xs] (vec (conj xs new-connection)))))
 
-(defn connections [data owner]
-  (reify
-    om/IInitState
-    (init-state [_]
-      {:delete (chan)})
-    om/IWillMount
-    (will-mount [_]
-      (let [delete (om/get-state owner :delete)]
-        (go (loop []
-              (let [connection (<! delete)]
-                (om/transact! data :connections
-                              (fn [xs] (vec (remove #(= connection %) xs))))
-                (recur))))))
-    om/IRenderState
-    (render-state [this {:keys [delete]}]
-      (html [:div {:class "connections-list"}
-             (html [:h1 "Connections list"])
-             (html [:div
-                    (om/build-all view (:connections data)
-                                  {:init-state {:delete delete}})])
-             (html [:div
+(defn connection-form [data owner]
+  (html [:div
                     [:form {:class "pure-form pure-form-aligned"}
                      [:div {:class "pure-control-group"}
                       [:label {:for="type"} "Type"]
@@ -77,5 +61,29 @@
                                                                                  (add-connection data owner new-connection)
                                                                                  ))
                                 } "Add Connection"]]]
-                    ])]
-            ))))
+                    ]))
+
+(defn connections [data owner]
+  (reify
+    om/IInitState
+    (init-state [_]
+      {:delete (chan)})
+    om/IWillMount
+    (will-mount [_]
+      (let [delete (om/get-state owner :delete)]
+        (go (loop []
+              (let [connection (<! delete)]
+                (om/transact! data :connections
+                              (fn [xs] (vec (remove #(= connection %) xs))))
+                (recur))))))
+    om/IRenderState
+    (render-state [this {:keys [delete]}]
+      (html [:div {:class "connections-list"}
+                    (om/build-all view (:connections data)
+                                  {:init-state {:delete delete}})
+             (connection-form data owner)]
+            )
+      
+      )
+    ))
+

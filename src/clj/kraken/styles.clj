@@ -16,8 +16,18 @@
    {:font-weight "normal"
     :font-family "Arial"
     :font-size "0.8em"
-    :background-color "#94CC87"})
-  ((rule :.connection-list-item:hover)
+    :background-color "#ffffff"})
+  ((rule :.connection-tile)
+   {:background-color "gray"
+    :padding "10px"
+    :margin "10px"})
+  ((rule :.connection-active)
+   {:background-color "#79FFB2"})
+  ((rule :.connection-inactive)
+   {:background-color "#4ED086"})
+  ((rule :.connection-error)
+   {:background-color "#E3291A"})
+  ((rule :.connection-tile:hover)
    {:background-color "#996E56"})
    ; )
   )
