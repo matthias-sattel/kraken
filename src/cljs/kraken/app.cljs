@@ -15,6 +15,8 @@
            :user "sa"
            :password "#231342"
            :state "active"
+           :host "192.168.11.2"
+           :port "5432"
            },
           {:label "QSSqlServer"
            :type "SqlServer"
@@ -23,6 +25,18 @@
            :user "sa"
            :password "#fsapfeof"
            :state "error"
+           :host "sql.mydomain.me"
+           :port "2341"
+           }
+          {:label "MySqlDemo"
+           :type "MySqlServer"
+           :version "7.4"
+           :database "customer"
+           :user "admin"
+           :password "#cdewif2"
+           :state "warning"
+           :host "sql.mydomain.me"
+           :port "2341"
            }]}))
 
 

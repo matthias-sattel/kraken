@@ -13,7 +13,11 @@
     (render-state [this {:keys [delete]}]
       (let [label (str (:label data))
             class-label (str "connection-" label)
-            activity-label (if (= (:state data) "active") "connection-active" "connection-error")]
+            activity-label (if (= (:state data) "active")
+                             "connection-active"
+                             (if (= (:state data) "error")
+                               "connection-error"
+                               "connection-warning"))]
         (html
          [:div {:class (str "pure-u-1 pure-u-md-1-3 pure-u-lg-1-5 connection-tile " class-label " " activity-label)}
           [:div {:class "pure-u-g connection-list-item"}

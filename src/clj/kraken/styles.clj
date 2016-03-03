@@ -27,6 +27,8 @@
    {:background-color "#4ED086"})
   ((rule :.connection-error)
    {:background-color "#E3291A"})
+  ((rule :.connection-warning)
+   {:background-color "#ffa500"})
   ((rule :.connection-tile:hover)
    {:background-color "#996E56"})
    ; )
