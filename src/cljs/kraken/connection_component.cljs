@@ -7,17 +7,22 @@
             [cljs.core.async :refer [put! chan <! ]]
             [cljs.reader :refer [read-string]]))
 
-(defn view [data owner]
+(defn availability-class [state]
+  (if (= state "active")
+    "connection-active"
+    (if (= state "error")
+      "connection-error"
+      "connection-warning"))
+  )
+  
+(defn connection-tile [data owner]
   (reify
     om/IRenderState
     (render-state [this {:keys [delete]}]
       (let [label (str (:label data))
             class-label (str "connection-" label)
-            activity-label (if (= (:state data) "active")
-                             "connection-active"
-                             (if (= (:state data) "error")
-                               "connection-error"
-                               "connection-warning"))]
+            activity-label (availability-class (:state data))
+            ]
         (html
          [:div {:class (str "pure-u-1 pure-u-md-1-3 pure-u-lg-1-5 connection-tile " class-label " " activity-label)}
           [:div {:class "pure-u-g connection-list-item"}
@@ -63,7 +68,6 @@
                                                                                           :host (str (dommy/value (sel1 :#new-connection-host)))
                                                                                           :port (str (dommy/value (sel1 :#new-connection-port)))
                                                                                           :type (str (.-value (aget (.-options el) (.-selectedIndex el))))}]
-                                                                      (.log js/console (str new-connection))
                                                                       (add-connection data owner new-connection)
                                                                       ))
                      } "Add Connection"]]]
@@ -85,7 +89,8 @@
     om/IRenderState
     (render-state [this {:keys [delete]}]
       (html [:div {:class "connections-list"}
-             (om/build-all view (:connections data)
+             (om/build-all connection-tile
+                           (:connections data)
                            {:init-state {:delete delete}})
              (connection-form data owner)]
             )

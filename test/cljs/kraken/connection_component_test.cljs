@@ -15,8 +15,13 @@
     (let [connections-label (map dommy/text (dommy/sel ".connection-list-item-header"))]
       (print (str "Connections : " connections-label))
       
-      (is (= 2 (count connections-label)))
+      (is (= 3 (count connections-label)))
       (is (some #(= "MyPostgresqlConnection" %)
                 connections-label)))
     
     ))
+
+(deftest availability-class-test []
+  (is (= "connection-active" (cc/availability-class "active")))
+  (is (= "connection-error" (cc/availability-class "error")))
+  (is (= "connection-warning" (cc/availability-class "warning"))))
