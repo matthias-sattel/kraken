@@ -2,7 +2,6 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [dommy.core :refer-macros [sel1]]
-            [kraken.connection :as connection]
             [kraken.connection-component :as connection-component]))
 
                                         ;[sablono.core :as html]))
@@ -15,6 +14,7 @@
            :database "users"
            :user "sa"
            :password "#231342"
+           :state "active"
            },
           {:label "QSSqlServer"
            :type "SqlServer"
@@ -22,6 +22,7 @@
            :database "invoices"
            :user "sa"
            :password "#fsapfeof"
+           :state "error"
            }]}))
 
 
