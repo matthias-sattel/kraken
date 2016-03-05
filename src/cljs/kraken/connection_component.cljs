@@ -69,14 +69,31 @@
            [:div {:class "pure-u-1 pure-u-md-1-2"}
             [:h3 {:class "connection-list-item-header"}
              label]]
-           [:div {:class "pure-u-1 pure-u-md-1-2"}
+           [:div {:class "pure-u-1 pure-u-md-1-2 connection-menu"}
+            [:div {:class "pure-u-g"}
+             [:div {:class "pure-u-1-5"}
             [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}
              [:i {:class "fa fa-trash"}]]]
+             [:div {:class "pure-u-1-5"}
+              [:button {:class "pure-button" :onClick (fn [e] (.log js/console (str e)))}
+               [:i {:class "fa fa-pencil-square-o"}]]]
+             ]]
            [:div {:class "pure-u-1"}
-            "Type: "
-            [:input {:type "text" :readonly "true" :disabled "true" :value (str (:type data))} ]]
+            [:div {:class "pure-u-g"}
+             [:div {:class "pure-u-1-2"}
+              "Type: "]
+             [:div {:class "pure-u-1-2"}
+              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:type data))} ]]
+             [:div {:class "pure-u-1-2"}
+              "Hostname: "]
+             [:div {:class "pure-u-1-2"}
+              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:host data))} ]]
+           [:div {:class "pure-u-1-2"}
+            "Port: "]
+             [:div {:class "pure-u-1-2"}
+              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:port data))} ]]
            ;(om/build connection-form {} {:init-state {:save save}})
-           ]]
+           ]]]]
          ))
       )))
 
