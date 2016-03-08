@@ -32,6 +32,9 @@
   ((rule :.connection-tile:hover)
    {:background-color "#00ffff"})
   ((rule :.connection-menu)
-   {:margin "0px"})
+   {:margin "2x"})
+  ((rule :.connection-menu-item)
+   {:padding "2x"
+    :margin "2px"})
    ; )
   )

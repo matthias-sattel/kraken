@@ -58,8 +58,9 @@
 (defn connection-tile [data owner]
   (reify
     om/IRenderState
-    (render-state [this {:keys [delete save]}]
+    (render-state [this {:keys [delete save edit]}]
       (let [label (str (:label data))
+            mode (if (= :view (:mode (:ui data))) {:readOnly "true" :disabled "true"})
             class-label (str "connection-" label)
             activity-label (availability-class (:state data))
             ]
@@ -71,27 +72,41 @@
              label]]
            [:div {:class "pure-u-1 pure-u-md-1-2 connection-menu"}
             [:div {:class "pure-u-g"}
-             [:div {:class "pure-u-1-5"}
-            [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}
-             [:i {:class "fa fa-trash"}]]]
-             [:div {:class "pure-u-1-5"}
-              [:button {:class "pure-button" :onClick (fn [e] (.log js/console (str e)))}
+             [:div {:class "pure-u-1-5 connection-menu-item"}
+              [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}
+               [:i {:class "fa fa-trash"}]]]
+             [:div {:class "pure-u-1-5 connection-menu-item"}
+              [:button {:class "pure-button" :onClick (fn [e]
+                                        ;(.log js/console (str e))
+                                                        (put! edit @data)
+                                                        )}
                [:i {:class "fa fa-pencil-square-o"}]]]
+             [:div {:class "pure-u-1-5 connection-menu-item"}
+              [:button {:class "pure-button" :onClick (fn [e] (.log js/console (str "Save " e)))}
+               [:i {:class "fa fa-floppy-o"}]]]
              ]]
            [:div {:class "pure-u-1"}
             [:div {:class "pure-u-g"}
              [:div {:class "pure-u-1-2"}
               "Type: "]
              [:div {:class "pure-u-1-2"}
-              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:type data))} ]]
+              [:input (merge {:type "text" :defaultValue (str (:type data))} mode) ]]
              [:div {:class "pure-u-1-2"}
               "Hostname: "]
              [:div {:class "pure-u-1-2"}
-              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:host data))} ]]
-           [:div {:class "pure-u-1-2"}
-            "Port: "]
+              [:input (merge {:type "text" :defaultValue (str (:host data))} mode)]]
              [:div {:class "pure-u-1-2"}
-              [:input {:type "text" :readonly "true" :disabled "true" :value (str (:port data))} ]]
+              "Port: "]
+             [:div {:class "pure-u-1-2"}
+              [:input (merge {:type "text" :defaultValue (str (:port data))} mode)]]
+             [:div {:class "pure-u-1-2"}
+              "User: "]
+             [:div {:class "pure-u-1-2"}
+              [:input (merge {:type "text" :defaultValue (str (:user data))} mode)]]
+             [:div {:class "pure-u-1-2"}
+              "Password: "]
+             [:div {:class "pure-u-1-2"}
+              [:input (merge {:type "password" :defaultValue (str (:password data))} mode)]]
            ;(om/build connection-form {} {:init-state {:save save}})
            ]]]]
          ))
@@ -109,11 +124,13 @@
     om/IInitState
     (init-state [_]
       {:delete (chan)
-       :save (chan)})
+       :save (chan)
+       :edit (chan)})
     om/IWillMount
     (will-mount [_]
       (let [delete (om/get-state owner :delete)
-            save (om/get-state owner :save)]
+            save (om/get-state owner :save)
+            edit (om/get-state owner :edit)]
         (go (loop []
               (let [connection (<! delete)]
                 (om/transact! data :connections
@@ -123,9 +140,16 @@
               (let [connection (<! save)]
                 (add-connection data owner connection)
                 (recur))))
+        (go (loop []
+              (let [connection (<! edit)]
+                (om/transact! data :connections
+                              (fn [xs] (
+                                        ;(update-in (:ui (filter #(= (:label connection) %) xs)) [:mode] :edit)
+                                        vec (assoc xs (.indexOf (to-array xs) connection) (update-in connection [:ui] {:mode :edit})))))
+                (recur))))
         ))
     om/IRenderState
-    (render-state [this {:keys [delete save]}]
+    (render-state [this {:keys [delete save edit]}]
       (html [:div {:class "connections-list"
                    :tabIndex "0"
                    ;:onKeyDown (fn [e] (.log js/console (str e)))
@@ -133,7 +157,8 @@
              (om/build-all connection-tile
                            (:connections data)
                            {:init-state {:delete delete
-                                         :save save}})
+                                         :save save
+                                         :edit edit}})
              (om/build connection-form {} {:init-state {:save save}})]
             )
       

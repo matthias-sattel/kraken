@@ -17,7 +17,8 @@
            :state "active"
            :host "192.168.11.2"
            :port "5432"
-           },
+           :ui {:mode :view}
+           }
           {:label "QSSqlServer"
            :type "SqlServer"
            :version "2012"
@@ -27,6 +28,7 @@
            :state "error"
            :host "sql.mydomain.me"
            :port "2341"
+           :ui {:mode :view}
            }
           {:label "MySqlDemo"
            :type "MySqlServer"
@@ -37,7 +39,19 @@
            :state "warning"
            :host "sql.mydomain.me"
            :port "2341"
-           }]}))
+           :ui {:mode :view}
+           }]
+         :dbms
+         [{:type "MongoDB"
+           :versions [{:version "3.2"}]
+           :connection-properties [:host :port :uri :user :password]}
+          {:type "PostgreSQL"
+           :versions [{:version "9.5"}]
+           :connection-properties [:host :port :database :uri :jndi :user :password]}
+          ]
+         :common-properties [:label :type :state]
+
+         }))
 
 
 
