@@ -37,8 +37,8 @@
            :user "admin"
            :password "#cdewif2"
            :state "warning"
-           :host "sql.mydomain.me"
-           :port "2341"
+           :host "mysql.mydomain.me"
+           :port "4532"
            :ui {:mode :view}
            }]
          :dbms
