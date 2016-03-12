@@ -7,7 +7,8 @@
             [kraken.testdata :as testdata]
             [dommy.core :refer-macros [sel sel1]]
             [dommy.core :as dommy]
-            [om.core :as om :include-macros true]))
+            [om.core :as om :include-macros true]
+            [cljs.core.async :refer [put! chan <! ]]))
 
 (deftest connections-view-label-test
   (let [c (ct/container!)]
@@ -21,7 +22,6 @@
     
     ))
 
-(deftest availability-class-test []
-  (is (= "connection-active" (cc/availability-class "active")))
-  (is (= "connection-error" (cc/availability-class "error")))
-  (is (= "connection-warning" (cc/availability-class "warning"))))
+
+
+
