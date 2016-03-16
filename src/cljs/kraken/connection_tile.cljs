@@ -17,6 +17,9 @@
 (defn input-id [label property]
   (str label "-" property))
 
+(defn button-id [label action]
+  (str "btn-" label "-" action))
+
 (defn ui-component [data owner]
   (reify
     om/IRenderState
@@ -41,7 +44,7 @@
            [:div {:class "pure-u-1 pure-u-md-1-2 connection-menu"}
             [:div {:class "pure-u-g"}
              [:div {:class "pure-u-1-5 connection-menu-item"}
-              [:button {:class "pure-button" :onClick (fn [e] (put! delete @data))}
+              [:button {:class "pure-button" :id (button-id label "delete") :onClick (fn [e] (put! delete @data))}
                [:i {:class "fa fa-trash"}]]]
              [:div {:class "pure-u-1-5 connection-menu-item"}
               [:button {:class "pure-button" :onClick (fn [e]

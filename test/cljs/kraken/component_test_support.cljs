@@ -1,4 +1,5 @@
 (ns kraken.component-test-support
+  (:require-macros [cljs.test :refer [is]])
   (:require  [dommy.core :refer-macros [sel sel1]]
              [dommy.core :as dommy])
   )

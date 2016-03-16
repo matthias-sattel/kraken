@@ -63,7 +63,7 @@
 
 
 (deftask testing []
-  (set-env! :source-paths #(conj % "test/cljs"))
+  (set-env! :source-paths #(conj % "test/cljs" "test/cljc"))
   identity)
 
 ;;; This prevents a name collision WARNING between the test task and
