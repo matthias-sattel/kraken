@@ -1,7 +1,7 @@
 (ns kraken.async-test-support
   #?(:cljs(:require-macros [cljs.test :refer [is async]]
                    [cljs.core.async.macros :refer [go]]))
-  (:require  [cljs.core.async :refer [put! <! take! timeout alts!]])
+  #?(:cljs(:require  [cljs.core.async :refer [put! <! take! timeout alts!]]))
   )
 
 ;test-async and test-within is taken from http://stackoverflow.com/questions/30766215/how-do-i-unit-test-clojure-core-async-go-macros
