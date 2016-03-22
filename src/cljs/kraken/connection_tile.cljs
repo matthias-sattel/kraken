@@ -6,6 +6,11 @@
             [cljs.core.async :refer [put!]]
             ))
 
+;; ## Class selector used to mark the availability of a connection
+;; Depending on the state a connection tile will have a availability class
+;; This class is used to format the connection according to its availability
+
+
 (defn availability-class [state]
   (if (= state "active")
     "connection-active"
@@ -14,16 +19,26 @@
       "connection-warning"))
   )
 
+;; Unique id for an input property of the connection tile.
+
 (defn input-id [label property]
   (str label "-" property))
+
+;; Unique id for a button of the connection tile.
 
 (defn button-id [label action]
   (str "btn-" label "-" action))
 
-(defn ui-component [data owner]
+;; ## The REACT-Component that can display a single connection tile
+
+(defn ui-component
+  "Generates a new react component. It shows a connection as a tile."
+  [data owner]
   (reify
     om/IRenderState
+                                        ; We need several async channels
     (render-state [this {:keys [delete save edit update]}]
+                                        ; Now we create some lexical bindings that we need to setup the component.
       (let [label (str (:label data))
             state (str (:state data))
             mode (if (= :view (:mode (:ui data))) {:readOnly "true" :disabled "true"})
@@ -35,6 +50,7 @@
             user (str (:user data))
             password (str (:password data))
             ]
+                                        ; The tile is rendered now as html div using sablono
         (html
          [:div {:class (str "pure-u-1 pure-u-md-1-3 pure-u-lg-1-5 connection-tile " class-label " " activity-label)}
           [:div {:class "pure-u-g connection-list-item"}

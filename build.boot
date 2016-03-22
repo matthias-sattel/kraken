@@ -1,5 +1,5 @@
 (set-env!
- :source-paths    #{"src/cljs" "src/clj"}
+ :source-paths    #{"src/cljs" "src/clj" "src/cljc"}
  :resource-paths  #{"resources"}
  :dependencies '[[adzerk/boot-cljs          "1.7.48-6"   :scope "test"]
                  [adzerk/boot-cljs-repl     "0.2.0"      :scope "test"]
@@ -14,7 +14,9 @@
                  [cljsjs/react-dom "0.14.3-1"]
                  [prismatic/dommy "1.1.0" :scope "test"]
                  [org.clojure/core.async "0.2.374"]
-                 [prismatic/schema "1.0.5"]])
+                 [prismatic/schema "1.0.5"]
+                 [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]]
+ )
 
 (swap! boot.repl/*default-dependencies*
        concat '[[cider/cider-nrepl "0.10.1"]])
@@ -29,9 +31,10 @@
  '[adzerk.boot-reload    :refer [reload]]
  '[pandeiro.boot-http    :refer [serve]]
  '[crisptrutski.boot-cljs-test :refer [test-cljs]]
- '[org.martinklepsch.boot-garden :refer [garden]])
+ '[org.martinklepsch.boot-garden :refer [garden]]
+ '[it.frbracch.boot-marginalia :refer [marginalia]])
 
-(set-env! :source-paths #(conj % "src/cljc"))
+;(set-env! :source-paths #(conj % "src/cljc"))
 
 (deftask build []
   (comp (speak)
@@ -83,3 +86,8 @@
   (comp (testing)
         (watch)
         (test-cljs :js-env :phantom)))
+
+(deftask doc []
+  (set-env! :source-paths #(conj % "src/cljc"))
+  (marginalia)
+  )
