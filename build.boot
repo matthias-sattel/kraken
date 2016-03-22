@@ -13,7 +13,8 @@
                  [cljsjs/react "0.14.3-0"]
                  [cljsjs/react-dom "0.14.3-1"]
                  [prismatic/dommy "1.1.0" :scope "test"]
-                 [org.clojure/core.async "0.2.374"]])
+                 [org.clojure/core.async "0.2.374"]
+                 [prismatic/schema "1.0.5"]])
 
 (swap! boot.repl/*default-dependencies*
        concat '[[cider/cider-nrepl "0.10.1"]])
@@ -29,6 +30,8 @@
  '[pandeiro.boot-http    :refer [serve]]
  '[crisptrutski.boot-cljs-test :refer [test-cljs]]
  '[org.martinklepsch.boot-garden :refer [garden]])
+
+(set-env! :source-paths #(conj % "src/cljc"))
 
 (deftask build []
   (comp (speak)
