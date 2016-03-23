@@ -1,17 +1,21 @@
 (set-env!
  :source-paths    #{"src/cljs" "src/clj" "src/cljc"}
  :resource-paths  #{"resources"}
- :dependencies '[[adzerk/boot-cljs          "1.7.48-6"   :scope "test"]
-                 [adzerk/boot-cljs-repl     "0.2.0"      :scope "test"]
-                 [adzerk/boot-reload        "0.4.1"      :scope "test"]
-                 [pandeiro/boot-http        "0.6.3"      :scope "test"]
-                 [org.clojure/clojurescript "1.7.122"]
+ :dependencies '[[adzerk/boot-cljs          "1.7.228-1"   :scope "test"]
+                 [adzerk/boot-cljs-repl     "0.3.0"      :scope "test"]
+                 [com.cemerick/piggieback "0.2.1" :scope "test"]
+                 [weasel "0.7.0" :scope "test"]
+                 [org.clojure/tools.nrepl "0.2.12" :scope "test"]
+                 [adzerk/boot-reload        "0.4.5"      :scope "test"]
+                 [pandeiro/boot-http        "0.7.3"      :scope "test"]
+                 [boot-deps "0.1.6" :scope "test"]
+                 [org.clojure/clojurescript "1.8.34"]
                  [crisptrutski/boot-cljs-test "0.2.0-SNAPSHOT" :scope "test"]
-                 [org.omcljs/om "0.8.6"]
-                 [org.martinklepsch/boot-garden "1.2.5-3" :scope "test"]
-                 [sablono "0.6.0"]
+                 [org.omcljs/om "0.9.0"]
+                 [org.martinklepsch/boot-garden "1.3.0-0" :scope "test"]
+                 [sablono "0.6.3"]
                  [cljsjs/react "0.14.3-0"]
-                 [cljsjs/react-dom "0.14.3-1"]
+                 [cljsjs/react-dom "0.14.3-0"]
                  [prismatic/dommy "1.1.0" :scope "test"]
                  [org.clojure/core.async "0.2.374"]
                  [prismatic/schema "1.0.5"]
@@ -32,7 +36,8 @@
  '[pandeiro.boot-http    :refer [serve]]
  '[crisptrutski.boot-cljs-test :refer [test-cljs]]
  '[org.martinklepsch.boot-garden :refer [garden]]
- '[it.frbracch.boot-marginalia :refer [marginalia]])
+ '[it.frbracch.boot-marginalia :refer [marginalia]]
+ '[boot-deps :refer [ancient]])
 
 ;(set-env! :source-paths #(conj % "src/cljc"))
 
