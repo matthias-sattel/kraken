@@ -63,13 +63,13 @@
               [:button {:class "pure-button" :id (button-id label "delete") :onClick (fn [e] (put! delete @data))}
                [:i {:class "fa fa-trash"}]]]
              [:div {:class "pure-u-1-5 connection-menu-item"}
-              [:button {:class "pure-button" :onClick (fn [e]
+              [:button {:class "pure-button" :id (button-id label "edit") :onClick (fn [e]
                                         ;(.log js/console (str e))
                                                         (put! edit @data)
                                                         )}
                [:i {:class "fa fa-pencil-square-o"}]]]
              [:div {:class "pure-u-1-5 connection-menu-item"}
-              [:button {:class "pure-button" :onClick (fn [e]
+              [:button {:class "pure-button" :id (button-id label "save") :onClick (fn [e]
                                                         (let [new-connection {:label label
                                                                               :type (dommy/value (sel1 (keyword (str "#" (input-id label "type")))))
                                                                               :host (dommy/value (sel1 (keyword (str "#" (input-id label "host")))))

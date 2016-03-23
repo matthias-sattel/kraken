@@ -17,6 +17,37 @@
   (is (= "connection-error" (tile/availability-class "error")))
   (is (= "connection-warning" (tile/availability-class "warning"))))
 
+(deftest edit-test []
+  (let [c (ct/container!)
+        edit-chan (chan)]
+    (om/root tile/ui-component
+             (first testdata/connections)
+             {:target c
+              :init-state {:delete (chan)
+                           :save (chan)
+                           :edit edit-chan
+                           :update (chan)}})
+    
+    (go
+      (.click (dommy/sel1 (str "#" (tile/button-id "MyPostgresqlConnection" "edit")))))
+    (async-test/test-async
+     (async-test/test-within 1000
+                             (go
+                               (is
+                                (= {:label "MyPostgresqlConnection"
+                                    :type "PostgreSql"
+                                    :version "9.4"
+                                    :database "users"
+                                    :user "sa"
+                                    :password "#231342"
+                                    :state "active"
+                                    :host "192.168.11.2"
+                                    :port "5432"
+                                    } (<! edit-chan))))
+                             ))
+    )
+  )
+
 (deftest delete-test []
   (let [c (ct/container!)
         delete-chan (chan)
