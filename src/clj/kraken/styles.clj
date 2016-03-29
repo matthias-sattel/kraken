@@ -17,6 +17,16 @@
     :font-family "Arial"
     :font-size "0.8em"
     :background-color "#ffffff"})
+  ((rule :.connections-list-offline)
+   {:font-weight "normal"
+    :font-family "Arial"
+    :font-size "0.8em"
+    :background-color "#ff6347"})
+  ((rule :.connections-list-online)
+   {:font-weight "normal"
+    :font-family "Arial"
+    :font-size "0.8em"
+    :background-color "green"})
   ((rule :.connection-tile)
    {:background-color "gray"
     :padding "10px"

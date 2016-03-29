@@ -50,7 +50,11 @@
            :connection-properties [:host :port :database :uri :jndi :user :password]}
           ]
          :common-properties [:label :type :state]
-
+         :backend {
+                   :host "localhost"
+                   :port "3000"
+                   :state :offline
+                   }
          }))
 
 
@@ -66,3 +70,4 @@
      app-state
      {:target (sel1 :#container)})
 )
+

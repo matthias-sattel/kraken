@@ -103,19 +103,22 @@
         ))
     om/IRenderState
     (render-state [this {:keys [delete save edit update]}]
-      (html [:div {:class "connections-list"
-                   :tabIndex "0"
-                   ;:onKeyDown (fn [e] (.log js/console (str e)))
-                   }
-             (om/build-all tile/ui-component
-                           (:connections data)
-                           {:init-state {:delete delete
-                                         :save save
-                                         :edit edit
-                                         :update update}})
-             (om/build connection-form {} {:init-state {:save save}})]
-            )
-      
+      (let [backend-connection-state (if (= :offline (:state (:backend data)))
+                                       "offline"
+                                       "online")]
+        (html [:div {:class (str "connections-list-" backend-connection-state) 
+                     :tabIndex "0"
+                                        ;:onKeyDown (fn [e] (.log js/console (str e)))
+                     }
+               (om/build-all tile/ui-component
+                             (:connections data)
+                             {:init-state {:delete delete
+                                           :save save
+                                           :edit edit
+                                           :update update}})
+               (om/build connection-form {} {:init-state {:save save}})]
+              )
+        )
       )
     )
   )
