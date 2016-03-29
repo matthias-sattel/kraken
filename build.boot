@@ -42,12 +42,16 @@
 ;(set-env! :source-paths #(conj % "src/cljc"))
 
 (deftask build []
-  (comp (speak)
+  (comp
+   
+   (speak)
         
         (cljs)
         
         (garden :styles-var 'kraken.styles/screen
-:output-to "css/garden.css")))
+                :output-to "css/garden.css")
+        
+        (target)))
 
 (deftask run []
   (comp (serve)
@@ -58,13 +62,20 @@
 
 (deftask production []
   (task-options! cljs {:optimizations :advanced}
-                      garden {:pretty-print false})
+                 garden {:pretty-print false}
+                 target {:dir #{"target/product"}})
   identity)
 
 (deftask development []
   (task-options! cljs {:optimizations :none :source-map true}
-                 reload {:on-jsload 'kraken.app/init})
+                 reload {:on-jsload 'kraken.app/init}
+                 target {:dir #{"target/dev"}})
   identity)
+
+(deftask produce []
+  (comp
+   (production)
+   (build)))
 
 (deftask dev
   "Simple alias to run application in development mode"
