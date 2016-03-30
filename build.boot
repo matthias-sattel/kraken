@@ -19,8 +19,10 @@
                  [prismatic/dommy "1.1.0" :scope "test"]
                  [org.clojure/core.async "0.2.374"]
                  [prismatic/schema "1.0.5"]
-                 [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]]
- )
+                 [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]
+
+                 [bidi "2.0.4"]]
+)
 
 (swap! boot.repl/*default-dependencies*
        concat '[[cider/cider-nrepl "0.10.1"]])
@@ -41,17 +43,19 @@
 
 ;(set-env! :source-paths #(conj % "src/cljc"))
 
+(def
+  version "0.1.0")
+
+(def
+  app-name "kraken")
+
 (deftask build []
   (comp
-   
    (speak)
-        
-        (cljs)
-        
-        (garden :styles-var 'kraken.styles/screen
-                :output-to "css/garden.css")
-        
-        (target)))
+   (cljs)
+   (garden :styles-var 'kraken.styles/screen
+           :output-to "css/garden.css")
+   (target)))
 
 (deftask run []
   (comp (serve)
@@ -72,10 +76,39 @@
                  target {:dir #{"target/dev"}})
   identity)
 
+(deftask setup-packaging []
+  (task-options! pom {:project 'kraken
+                      :version "0.1.0"}
+                 aot {:namespace '#{kraken.embedded}}
+                 jar {:main 'kraken.embedded
+                      :file (str app-name ".jar")
+                      :manifest {
+                                 "Project" app-name
+                                 "Version" version}}
+                 target {:dir #{"target/product"}})
+  identity)
+
 (deftask produce []
   (comp
    (production)
    (build)))
+
+(deftask package-app []
+  (comp
+   ;(target :dir #{"target/product"})
+   (setup-packaging)
+   (produce)
+   (aot)
+   ;(uber)
+   ;(build)
+   ;(uber)
+   ;(target :dir #{"target/product"})
+   (jar)
+   (target)
+   ;(target :dir #{"target/product"})
+;   (target :dir #{"target/product"})
+   ;(install)
+   ))
 
 (deftask dev
   "Simple alias to run application in development mode"
