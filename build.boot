@@ -21,6 +21,8 @@
                  [prismatic/schema "1.0.5"]
                  [it.frbracch/boot-marginalia "0.1.3-1" :scope "test"]
 
+                 [ring/ring-core "1.4.0"]
+                 [ring/ring-jetty-adapter "1.4.0"]
                  [bidi "2.0.4"]]
 )
 
@@ -88,6 +90,11 @@
                  target {:dir #{"target/product"}})
   identity)
 
+(deftask run-server []
+  (comp
+   (serve :handler 'kraken.embedded/handler :reload true :port 3001)
+   (wait)))
+
 (deftask produce []
   (comp
    (production)
@@ -102,7 +109,8 @@
    ;(uber)
    ;(build)
    ;(uber)
-   ;(target :dir #{"target/product"})
+                                        ;(target :dir #{"target/product"})
+   (uber)
    (jar)
    (target)
    ;(target :dir #{"target/product"})
