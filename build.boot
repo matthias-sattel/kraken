@@ -91,9 +91,14 @@
   identity)
 
 (deftask run-server []
-  (comp
-   (serve :handler 'kraken.embedded/handler :reload true :port 3001)
-   (wait)))
+  (task-options! serve {:handler 'kraken.embedded/app-handler
+                        :reload true
+                        :port 3001}
+                 cljs {:compiler-options {:asset-path "js"}
+                       :optimizations :none
+                       :source-map true}
+                 target {:dir #{"target/public"}})
+  (run))
 
 (deftask produce []
   (comp
